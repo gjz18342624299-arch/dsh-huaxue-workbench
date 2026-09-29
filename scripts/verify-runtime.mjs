@@ -66,5 +66,13 @@ try {
   assert.ok(renderPrompt(await ctx.systemPrompt.assemble({agent:standardGame})).includes('[huaxue-game:S08]'));
   const other = { session: { id: 'other-workbench', header: { agentPreset: 'huashao2' }, snapshotEvents: () => [] } };
   assert.ok(!renderPrompt(await ctx.systemPrompt.assemble({ agent: other })).includes('[huaxue:'));
+  // Official ownership host: repository-derived identity authorizes sessions;
+  // foreign owners keep their sessions isolated even with a legacy preset.
+  const ownershipData = { sessionBindings: { 'official-bound': 'gjz18342624299-arch/dsh-huaxue-workbench', 'foreign-bound': 'acme/elsewhere' } };
+  ctx.reflect.provide('desktopWorkbenchOwnership', { read: async () => ownershipData });
+  const officialBound = { session: { id: 'official-bound', header: { agentPreset: 'standard' }, snapshotEvents: () => [] } };
+  assert.ok(renderPrompt(await ctx.systemPrompt.assemble({ agent: officialBound })).includes('[huaxue:'));
+  const foreign = { session: { id: 'foreign-bound', header: { agentPreset: 'huashao2' }, snapshotEvents: () => [] } };
+  assert.ok(!renderPrompt(await ctx.systemPrompt.assemble({ agent: foreign })).includes('[huaxue:'));
   console.log('Installed DSH runtime: host workbench service, standard-preset persona binding, cross-workbench isolation, settings validation, turn snapshots and switching PASS');
 } finally { await ctx.fiber.dispose(); }

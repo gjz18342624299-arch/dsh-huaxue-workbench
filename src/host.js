@@ -1,8 +1,8 @@
 import z from '@deepseek-ai/schemastery';
 export const name = 'local-workbenches';
-export const inject = ['settings'];
+export const inject = ['huaxueState'];
 export function apply(ctx) {
-  const state = ctx.settings.register('dsh-workbenches', z.object({
+  const state = ctx.huaxueState.register('dsh-workbenches', z.object({
     activeId: z.string().default(''),
     recent: z.dict(z.string()).default({}),
     bindings: z.dict(z.string()).default({}),

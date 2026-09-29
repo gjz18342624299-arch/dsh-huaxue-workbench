@@ -1,8 +1,11 @@
 {
-  "desktop": ["0.9.0"],
-  "harness": ["0.1.5-rc.2"],
-  "requiredSlots": ["main", "conversation.input.dock", "shell.overlay", "sidebar.footer.action"],
-  "requiredServices": ["layout.selectPanel", "sessions.list", "settings", "systemPrompt"],
+  "desktop": ["0.10.0-test.20260927"],
+  "harness": ["0.1.7-rc.2"],
+  "requiredServices": ["desktopWorkbenches", "sessions.list", "workspaces.list", "uiWorkspace.openSession", "layout.selectPanel", "connection", "systemPrompt"],
+  "providedServices": ["huaxueState"],
   "presentationSelectors": ["[data-phase]"],
-  "status": "candidate-under-validation"
+  "status": "local-desktop-entry-chat-restart-verified",
+  "validatedOn": "2026-09-29",
+  "validationScope": ["workbench-entry", "seven-member-panel", "native-persona-chat", "desktop-restart-persistence"],
+  "notValidated": ["fresh-install", "full-game-end-to-end", "other-desktop-or-harness-versions"]
 }

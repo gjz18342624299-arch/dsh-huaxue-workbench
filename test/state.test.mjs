@@ -1,0 +1,24 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { mkdtemp, writeFile, readFile, mkdir } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
+import { createStateStore } from '../src/state.js';
+test('state migrates legacy data, persists edits, rejects conflicts and unsafe paths', async()=>{
+  const base=fileURLToPath(new URL('../../../work/repair-codex-20260928/state-tests/',import.meta.url));
+  await mkdir(base,{recursive:true});
+  const home=await mkdtemp(base+'case-');
+  await writeFile(home+'/settings.yaml.imported','huaxue-workbench:\n  lastMemberId: qing\n  sessions: {}\nunrelated:\n  private: excluded\n');
+  const schema=v=>({lastMemberId:'ning',sessions:{},...v});
+  const store=await createStateStore(home);
+  store.register('huaxue-workbench',schema);
+  assert.equal(store.get('huaxue-workbench').lastMemberId,'qing');
+  await store.mutate('huaxue-workbench',[{op:'set',path:['lastMemberId'],value:'ning'}],0);
+  await assert.rejects(store.mutate('huaxue-workbench',[{op:'set',path:['lastMemberId'],value:'qing'}],0),{code:'SETTINGS_CONFLICT'});
+  await assert.rejects(store.mutate('huaxue-workbench',[{op:'set',path:['__proto__','polluted'],value:true}],1));
+  const restored=await createStateStore(home); restored.register('huaxue-workbench',schema);
+  assert.equal(restored.get('huaxue-workbench').lastMemberId,'ning');
+  assert.equal(restored.get('unrelated'),undefined);
+  const disk=JSON.parse(await readFile(home+'/huaxue-workbench/state.json','utf8'));
+  assert.equal(disk.revision,1);
+  assert.equal({}.polluted,undefined);
+});

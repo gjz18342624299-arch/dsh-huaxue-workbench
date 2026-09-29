@@ -1,14 +1,20 @@
 {
   "name": "dsh-huaxue-workbench",
-  "version": "0.3.0-rc.1",
-  "description": "花少2花学工作台：独立安装，无宿主文件补丁",
+  "version": "0.4.0-rc.1",
+  "description": "花少2花学工作台：七位花学旅伴陪你工作、聊天与借个嘴",
   "type": "module",
-  "license": "UNLICENSED",
+  "license": "MIT",
+  "author": "gjz18342624299-arch",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gjz18342624299-arch/dsh-huaxue-workbench"
+  },
   "main": "./index.js",
   "exports": {
     ".": "./index.js",
     "./client": "./client.js",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./cordis.patch.yml": "./cordis.patch.yml"
   },
   "files": [
     "index.js",
@@ -34,8 +40,10 @@
   "peerDependencies": {
     "@deepseek-ai/cordis": "^4.0.1",
     "@deepseek-ai/schemastery": "^3.18.1",
-    "@deepseek-ai/dsh-settings": "0.1.5-rc.2",
-    "@deepseek-ai/dsh-system-prompt": "0.1.5-rc.2"
+    "@deepseek-ai/dsh-system-prompt": ">=0.1.7-rc.2 <0.2.0-0"
+  },
+  "dependencies": {
+    "yaml": "2.9.0"
   },
   "dsh": {
     "bundle": {
@@ -44,6 +52,7 @@
     "client": {
       "platform": "web",
       "inject": [
+        "dsh-desktop-workbenches",
         "@deepseek-ai/dsh-client-ui-layout",
         "@deepseek-ai/dsh-client-ui-conversation",
         "@deepseek-ai/dsh-client-ui-settings",
@@ -59,9 +68,6 @@
       "optional": true
     },
     "@deepseek-ai/dsh-system-prompt": {
-      "optional": true
-    },
-    "@deepseek-ai/dsh-settings": {
       "optional": true
     }
   }
