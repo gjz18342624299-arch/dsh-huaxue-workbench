@@ -32,7 +32,8 @@
     "build": "node scripts/build.mjs",
     "test": "node --test test/*.test.mjs",
     "check": "node scripts/check.mjs",
-    "prepack": "npm run build && npm run check && npm test"
+    "prepack": "npm run build && npm run check && npm test",
+    "pack:check": "node scripts/verify-package.mjs"
   },
   "engines": {
     "node": ">=22"
