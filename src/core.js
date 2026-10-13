@@ -34,6 +34,8 @@ export function validateState(value) {
     if (session.gameParentId !== undefined && (typeof session.gameParentId !== 'string' || !session.gameParentId)) throw new TypeError('演练所属会话无效');
     if (session.gameCreatedAt !== undefined && (!Number.isFinite(session.gameCreatedAt) || session.gameCreatedAt < 0)) throw new TypeError('演练时间无效');
     if (session.gameEnded !== undefined && typeof session.gameEnded !== 'boolean') throw new TypeError('演练状态无效');
+    if (session.gameTurnCount !== undefined && (!Number.isSafeInteger(session.gameTurnCount) || session.gameTurnCount < 0)) throw new TypeError('演练轮次无效');
+    for (const key of ['gameOutcome', 'gameOutcomeDirection']) if (session[key] !== undefined && (typeof session[key] !== 'string' || session[key].length > 10000)) throw new TypeError('演练结果无效');
     if (session.switchNotice?.memberId !== undefined) {
       member(session.switchNotice.memberId);
       if (!Number.isInteger(session.switchNotice.afterTurn) || session.switchNotice.afterTurn < -1) throw new TypeError('切换提示轮次无效');

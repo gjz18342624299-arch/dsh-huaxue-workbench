@@ -74,3 +74,11 @@ test('history attribution is recovered from persisted request headers, never the
   events.push({ type: 'turn/start', data: { turn: 3 } }, { type: 'assistant/message', data: { id: 'm3' } });
   assert.equal(messageAttributions(events).m3.memberId, 'qing');
 });
+
+test('game archive accepts saved outcomes and rejects invalid result metadata', () => {
+  const session = { activeMemberId: 'ning', gameId: 'S21', gameTurnCount: 3, gameOutcome: '保留的演练结果', gameOutcomeDirection: '继续协作' };
+  const state = patch => ({ lastMemberId: 'ning', sessions: { game: { ...session, ...patch } } });
+  assert.doesNotThrow(() => validateState(state({})));
+  for (const gameTurnCount of [-1, 1.5, '3', Number.MAX_SAFE_INTEGER + 1]) assert.throws(() => validateState(state({ gameTurnCount })), /演练轮次/);
+  for (const key of ['gameOutcome', 'gameOutcomeDirection']) for (const value of [3, 'x'.repeat(10001)]) assert.throws(() => validateState(state({ [key]: value })), /演练结果/);
+});

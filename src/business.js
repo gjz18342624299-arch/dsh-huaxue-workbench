@@ -13,7 +13,7 @@ export function apply(ctx) {
   const scope = ctx.huaxueState.register(NAMESPACE, z.object({
     lastMemberId: z.string().default('ning'),
     skin: z.object({ image: z.string().default(''), opacity: z.number().default(0.15), position: z.string().default('center'), fit: z.string().default('cover'), filename: z.string().default('') }).default({ image: '', opacity: 0.15, position: 'center', fit: 'cover', filename: '' }),
-    sessions: z.dict(z.object({ activeMemberId: z.string().required(), initialMemberId: z.string(), gameId: z.string(), gameParentId: z.string(), gameCreatedAt: z.number(), gameFirstLine: z.string(), gameEnded: z.boolean(), turnMembers: z.dict(z.string()).default({}), switchNotice: z.object({ memberId: z.string(), afterTurn: z.number() }).default({}) })).default({})
+    sessions: z.dict(z.object({ activeMemberId: z.string().required(), initialMemberId: z.string(), gameId: z.string(), gameParentId: z.string(), gameCreatedAt: z.number(), gameFirstLine: z.string(), gameEnded: z.boolean(), gameOutcome: z.string(), gameOutcomeDirection: z.string(), gameTurnCount: z.number(), turnMembers: z.dict(z.string()).default({}), switchNotice: z.object({ memberId: z.string(), afterTurn: z.number() }).default({}) })).default({})
   }), { validate: validateState });
   const legacyBindings = () => {
     try { return ctx.huaxueState.get(LEGACY_NAMESPACE)?.bindings || {}; } catch { return {}; }
